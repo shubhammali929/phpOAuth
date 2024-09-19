@@ -12,7 +12,10 @@
         "files" : [
             "src/handleUri.php",
             "src/authenticate.php",
-            "src/utils.php"
+            "src/utils.php",
+            "src/startAuthorisation.php",
+            "src/handleCodeAndState.php",
+            "src/makePostApiCall.php"
         ]
     },
     "authors": [

@@ -1,7 +1,6 @@
 <?php
 namespace Minioarage2\Phpoauth;
 use \Exception;
-require_once "makePostApiCall.php"; 
 class OAuthApiClient {
     private Config $config;
 
@@ -19,10 +18,7 @@ class OAuthApiClient {
             'client_secret' => $this->config->getClientSecret()
         ];
 
-        // Use the makeCall function from makePostApiCall.php..
-        $tokenResponse = makeCall($this->config->getBaseUrl() . 'moas/rest/oauth/token', [
-            'Accept: application/json'
-        ], $postData);
+        $tokenResponse = $this->makeApiCall('moas/rest/oauth/token', $postData, 'POST');
         
         if (!isset($tokenResponse['access_token'])) {
             throw new Exception('Access token not found in response.');
@@ -34,10 +30,41 @@ class OAuthApiClient {
 
     // Gets user info by making a GET request
     private function getUserInfo(string $accessToken): array {
-        // Use makeCall function for the GET request
-        return makeCall($this->config->getBaseUrl() . 'moas/rest/oauth/getuserinfo', [
-            'Accept: application/json',
-            'Authorization: Bearer ' . $accessToken
-        ], []);
+        return $this->makeApiCall('moas/rest/oauth/getuserinfo', [], 'GET', $accessToken);
+    }
+
+    // Generalized API call method
+    private function makeApiCall(string $endpoint, array $data, string $method, string $accessToken = null): ?array {
+        $url = $this->config->getBaseUrl() . $endpoint;
+        $ch = curl_init($url);
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+
+        if ($method === 'POST') {
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+        }
+
+        $headers = ['Accept: application/json'];
+        if ($accessToken) {
+            $headers[] = 'Authorization: Bearer ' . $accessToken;
+        }
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $response = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            throw new Exception('Curl error: ' . curl_error($ch));
+        }
+
+        curl_close($ch);
+
+        $decodedResponse = json_decode($response, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new Exception('JSON decode error: ' . json_last_error_msg());
+        }
+
+        return $decodedResponse;
     }
 }
