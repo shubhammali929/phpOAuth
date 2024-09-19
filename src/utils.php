@@ -1,7 +1,6 @@
 <?php
 namespace Minioarage2\Phpoauth;
 use \Exception;
-require_once __DIR__ . '/../vendor/autoload.php';
 use \Firebase\JWT\JWT;
 use \Firebase\JWT\Key;
 
