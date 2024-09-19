@@ -1,7 +1,7 @@
 <?php
 namespace Minioarage2\Phpoauth;
-require_once 'makePostApiCall.php';
-require_once "utils.php";
+use function Minioarage2\Phpoauth\makeCall;
+use function Minioarage2\Phpoauth\decodeToken;
 
 function handleCodeAndState($auth_code, $state, $config, $loginSuccessListener) {
     $Storedstate = $_SESSION['state'];

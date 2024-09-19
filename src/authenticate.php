@@ -1,9 +1,7 @@
 <?php
 namespace Minioarage2\Phpoauth;
 use \Exception;
-require_once 'config.php';
-require_once 'OAuthApiClient.php';
-require_once 'LoginSuccessListener.php'; 
+use Minioarage2\Phpoauth\OAuthApiClient; 
 
 function authenticateUserWithPasswordGrant($username, $password, $config, $loginSuccessListener) {
     $client = new OAuthApiClient($config); // Create OAuthApiClient instance

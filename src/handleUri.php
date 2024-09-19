@@ -1,8 +1,8 @@
 <?php
 namespace Minioarage2\Phpoauth;
-require_once "startAuthorisation.php";
-require_once "handleCodeAndState.php";
-require_once "utils.php";
+use function Minioarage2\Phpoauth\startAuthorisation;
+use function Minioarage2\Phpoauth\handleCodeAndState;
+use function Minioarage2\Phpoauth\decodeToken;
 
 
 function handleUri($config, $uri, $loginSuccessListener) {
