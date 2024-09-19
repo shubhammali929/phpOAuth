@@ -1,0 +1,24 @@
+{
+    "name": "minioarage2/phpoauth",
+    "type": "library",
+    "require": {
+        "firebase/php-jwt": "^6.10"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Minioarage2\\Phpoauth\\": "src/"
+        },
+        "files" : [
+            "src/handleUri.php",
+            "src/authenticate.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Shubham Mali",
+            "email": "shubhammali929@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable"
+}
