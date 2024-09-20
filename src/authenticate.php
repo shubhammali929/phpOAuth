@@ -1,5 +1,6 @@
 <?php
 namespace Minioarage2\Phpoauth;
+
 use \Exception;
 use Minioarage2\Phpoauth\OAuthApiClient; 
 
@@ -17,6 +18,10 @@ function authenticateUserWithPasswordGrant($username, $password, $config, $login
         $loginSuccessListener->onLoginSuccess($userInfoObject);
 
     } catch (Exception $e) {
-        echo 'Error: ' . $e->getMessage();
+        // Extract and decode the error message, then pass the "message" field to onError
+        $loginSuccessListener->onError(
+            json_decode($e->getMessage(), true)['message'] ?? 'An unknown error occurred.'
+        );
+
     }
 }

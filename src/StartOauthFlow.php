@@ -2,7 +2,7 @@
 namespace Minioarage2\Phpoauth;
 use function Minioarage2\Phpoauth\generateCodeChallenge;
 use function Minioarage2\Phpoauth\generateCodeVerifier;
-class OAuthFlow {
+class StartOAuthFlow {
     private Config $config;
 
     public function __construct(Config $config) {

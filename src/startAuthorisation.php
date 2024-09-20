@@ -1,34 +1,14 @@
 <?php
 namespace Minioarage2\Phpoauth;
-use Minioarage2\Phpoauth\OAuthCodeFlow;
-use Minioarage2\Phpoauth\OAuthImplicitFlow;
-use Minioarage2\Phpoauth\OAuthPkceFlow;
 
-function startAuthorisation($config, $grantType){
+// require_once "OAuthFlow.php";
+use Minioarage2\Phpoauth\StartOAuthFlow;
 
+function startAuthorisation($config, $grantType) {
     $_SESSION['grant_type'] = $grantType;
-    $_SESSION['state'] = bin2hex(random_bytes(16)); // Generate a random state for security
+    $_SESSION['state'] = $_SESSION['state'] ?? bin2hex(random_bytes(16)); // Ensure state is generated for security
 
-
-    // Handle different grant types
-    switch ($grantType) {
-        case 'implicit':
-            $implicitFlow = new OAuthImplicitFlow($config);
-            $implicitFlow->redirectToAuthorization();
-            break;
-
-        case 'auth_code':
-            $codeFlow = new OAuthCodeFlow($config);
-            $codeFlow->redirectToAuthorization();
-            break;
-
-        case 'pkce':
-            $pkceFlow = new OAuthPkceFlow($config);
-            $pkceFlow->redirectToAuthorization();
-            break;
-
-        default:
-            echo "Invalid grant type!";
-            break;
-    }
+    // Initialize OAuthFlow class and handle authorization
+    $oauthFlow = new StartOAuthFlow($config);
+    $oauthFlow->redirectToAuthorization($grantType);
 }

@@ -1,6 +1,8 @@
 <?php
 namespace Minioarage2\Phpoauth;
+
 use \Exception;
+
 class OAuthApiClient {
     private Config $config;
 
@@ -20,8 +22,9 @@ class OAuthApiClient {
 
         $tokenResponse = $this->makeApiCall('moas/rest/oauth/token', $postData, 'POST');
         
+        // If the access token is not present, throw an exception with the full response
         if (!isset($tokenResponse['access_token'])) {
-            throw new Exception('Access token not found in response.');
+            throw new Exception(json_encode($tokenResponse)); 
         }
 
         // Automatically call getUserInfo using the access token

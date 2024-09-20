@@ -5,6 +5,7 @@ use function Minioarage2\Phpoauth\decodeToken;
 
 function handleCodeAndState($auth_code, $state, $config, $loginSuccessListener) {
     $Storedstate = $_SESSION['state'];
+
     if ($state == $Storedstate) {
         // Define the API call parameters
         $url = 'https://testshubham.miniorange.in/moas/rest/oauth/token';
@@ -30,19 +31,31 @@ function handleCodeAndState($auth_code, $state, $config, $loginSuccessListener) 
             $params['code_verifier'] = $code_verifier;
         }
 
-        // Make the Aapi call
-        $response = makeCall($url, $headers, $params);
-        $id_token = $response['id_token'];
-        $pem = $config->getPemCertificate();
-        $decoded = decodeToken($pem, $id_token);
+        try {
+            // Make the API call
+            $response = makeCall($url, $headers, $params);
 
-        if ($decoded !== null) {
-            // Trigger the login success listener
-            $loginSuccessListener->onLoginSuccess($decoded);
-        } else {
-            echo "Invalid token.";
+            // Check if the ID token is present in the response
+            if (!isset($response['id_token'])) {
+                throw new \Exception('ID token not found in the response.');
+            }
+
+            $id_token = $response['id_token'];
+            $pem = $config->getPemCertificate();
+            $decoded = decodeToken($pem, $id_token);
+
+            if ($decoded !== null) {
+                // Trigger the login success listener
+                $loginSuccessListener->onLoginSuccess($decoded);
+            } else {
+                throw new \Exception('Invalid token.');
+            }
+        } catch (\Exception $e) {
+            // Handle the error and trigger onError
+            $loginSuccessListener->onError($e->getMessage());
         }
     } else {
-        echo "Invalid state.";
+        // Handle invalid state and trigger onError
+        $loginSuccessListener->onError('Invalid state.');
     }
 }
