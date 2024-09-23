@@ -22,7 +22,7 @@ class StartOAuthFlow {
             $scope = 'email'; // we will get access token and then make req at getuserinfo endpoint....
         }
 
-        // PKCE specific code challenge
+        // PKCE code challenge
         $codeChallengeParam = '';
         if ($grantType === 'pkce') {
             $codeVerifier = generateCodeVerifier();

@@ -10,7 +10,7 @@ class OAuthApiClient {
         $this->config = $config;
     }
 
-    // Automatically calls getUserInfo after getting the access token
+    // call getUserInfo after getting the access token
     public function getAccessTokenWithPassword(string $username, string $password): array {
         $postData = [
             'grant_type' => 'password',

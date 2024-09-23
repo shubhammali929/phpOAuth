@@ -37,7 +37,8 @@ function handleCodeAndState($auth_code, $state, $config, $loginSuccessListener) 
 
             // Check if the ID token is present in the response
             if (!isset($response['id_token'])) {
-                throw new \Exception('ID token not found in the response.');
+                // throw new \Exception('ID token not found in the response.');
+                $loginSuccessListener->onError("ID token not found in the response for OAuth Flow...");
             }
 
             $id_token = $response['id_token'];
@@ -48,7 +49,8 @@ function handleCodeAndState($auth_code, $state, $config, $loginSuccessListener) 
                 // Trigger the login success listener
                 $loginSuccessListener->onLoginSuccess($decoded);
             } else {
-                throw new \Exception('Invalid token.');
+                // throw new \Exception('Invalid token.');
+                $loginSuccessListener->onError("Invalid Token ..");
             }
         } catch (\Exception $e) {
             // Handle the error and trigger onError
