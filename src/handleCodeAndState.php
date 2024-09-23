@@ -7,8 +7,8 @@ function handleCodeAndState($auth_code, $state, $config, $loginSuccessListener) 
     $Storedstate = $_SESSION['state'];
 
     if ($state == $Storedstate) {
-        // Define the API call parameters
-        $url = 'https://testshubham.miniorange.in/moas/rest/oauth/token';
+        $baseUri = $config->getBaseUrl(); // Assuming getBaseUrl() returns the base URI
+        $url = $baseUri . '/moas/rest/oauth/token'; // Concatenate base URI with endpoint
         $headers = [
             'Content-Type: application/x-www-form-urlencoded'
         ];
@@ -37,7 +37,6 @@ function handleCodeAndState($auth_code, $state, $config, $loginSuccessListener) 
 
             // Check if the ID token is present in the response
             if (!isset($response['id_token'])) {
-                // throw new \Exception('ID token not found in the response.');
                 $loginSuccessListener->onError("ID token not found in the response for OAuth Flow...");
             }
 
@@ -49,7 +48,6 @@ function handleCodeAndState($auth_code, $state, $config, $loginSuccessListener) 
                 // Trigger the login success listener
                 $loginSuccessListener->onLoginSuccess($decoded);
             } else {
-                // throw new \Exception('Invalid token.');
                 $loginSuccessListener->onError("Invalid Token ..");
             }
         } catch (\Exception $e) {
